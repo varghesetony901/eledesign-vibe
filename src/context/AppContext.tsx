@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 export interface CartItem {
   id: string;
@@ -38,7 +44,9 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isB2B, setIsB2BState] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
@@ -77,11 +85,14 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       val
         ? "Switched to B2B Partner Portal. Trade pricing and bulk options unlocked."
         : "Switched to B2C Retail storefront.",
-      "info"
+      "info",
     );
   };
 
-  const addToast = (message: string, type: "success" | "info" | "warning" = "success") => {
+  const addToast = (
+    message: string,
+    type: "success" | "info" | "warning" = "success",
+  ) => {
     const id = `toast-${++toastIdCounter.current}`;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
@@ -93,7 +104,10 @@ export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const addToCart = (item: Omit<CartItem, "quantity">, quantity: number = 1) => {
+  const addToCart = (
+    item: Omit<CartItem, "quantity">,
+    quantity: number = 1,
+  ) => {
     const existingIndex = cart.findIndex((i) => i.id === item.id);
     const newCart = [...cart];
     if (existingIndex > -1) {

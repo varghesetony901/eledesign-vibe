@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Ruler, Truck, Building2, X, ChevronRight, ArrowRight, Sparkles, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useApp } from "@/context/AppContext";
 
 interface TrustItem {
@@ -81,7 +81,7 @@ export const TrustBanner: React.FC = () => {
   };
 
   // Staggered Container animations
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -91,12 +91,12 @@ export const TrustBanner: React.FC = () => {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      transition: { type: "spring" as const, stiffness: 100, damping: 15 },
     },
   };
 
