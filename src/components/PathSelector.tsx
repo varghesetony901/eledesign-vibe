@@ -9,13 +9,64 @@ import {
   Trees,
   Upload,
   Wand2,
-  Zap
+  Zap,
+  ArrowLeftRight
 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 export const PathSelector: React.FC = () => {
+  const [position, setPosition] = useState<number>(50); // percentage (0 to 100)
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = useCallback((clientX: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    setPosition(percentage);
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (!isDragging) return;
+    if (e.touches.length > 0) {
+      handleMove(e.touches[0].clientX);
+    }
+  }, [isDragging, handleMove]);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    handleMove(e.clientX);
+  }, [isDragging, handleMove]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("touchmove", handleTouchMove, { passive: true });
+      window.addEventListener("touchend", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleMouseUp);
+    };
+  }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove]);
+
+  const startDrag = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
   return (
+
     <section className="relative py-20 lg:py-28 overflow-hidden">
       {/* Decorative Subtle Ambient Blobs */}
       <div className="absolute top-10 left-10 w-72 h-72 bg-brand-forest/5  blur-3xl pointer-events-none" />
@@ -117,13 +168,45 @@ export const PathSelector: React.FC = () => {
             className="group relative  bg-white border border-brand-charcoal/10 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 flex flex-col justify-between"
           >
             {/* Top Image Banner with Before/After AI Transformation Overlay */}
-            <div className="relative h-64 sm:h-80 lg:h-72 w-full overflow-hidden">
-              <img
-                src="/image.jpg"
-                alt="AI Outdoor Garden Transformation"
-                className="w-full h-full object-cover object-bottom"
-              />
+            <div 
+              ref={containerRef}
+              className="relative h-64 sm:h-80 lg:h-72 w-full overflow-hidden cursor-ew-resize select-none"
+            >
+              {/* BEFORE IMAGE (Background) */}
+              <div className="absolute inset-0 w-full h-full">
+                <img
+                  src="/garden1before.png"
+                  alt="Bare concrete balcony before transformation"
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              </div>
+
+              {/* AFTER IMAGE (Foreground Overlay with CSS clip-path) */}
+              <div
+                className="absolute inset-0 h-full w-full pointer-events-none"
+                style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
+              >
+                <img
+                  src="/garden1.png"
+                  alt="Lush green garden balcony after transformation"
+                  className="w-full h-full object-cover pointer-events-none absolute inset-0"
+                />
+              </div>
+
+              {/* SLIDER HANDLE LINE & THUMB BUTTON */}
+              <div
+                className="absolute top-0 bottom-0 z-20 w-1 bg-white/70 backdrop-blur-xs cursor-ew-resize flex items-center justify-center"
+                style={{ left: `${position}%` }}
+                onMouseDown={startDrag}
+                onTouchStart={startDrag}
+              >
+                {/* Floating Grip Button */}
+                <div className="w-8 h-8 rounded-full bg-white/80 border border-brand-charcoal/15 shadow-md flex items-center justify-center transition-transform duration-200 active:scale-95">
+                  <ArrowLeftRight className="w-3.5 h-3.5 text-black" />
+                </div>
+              </div>
             </div>
+
 
             {/* Card Content */}
             <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-4">
