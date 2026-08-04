@@ -1,31 +1,25 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useApp } from "@/context/AppContext";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Briefcase,
+  Building,
+  ChevronDown,
+  ChevronRight,
+  Menu,
+  Search,
+  ShoppingBag,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Search,
-  User,
-  ShoppingBag,
-  Menu,
-  X,
-  ChevronDown,
-  Building,
-  Briefcase,
-  ChevronRight,
-} from "lucide-react";
-import { useApp } from "@/context/AppContext";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
 export const Navbar: React.FC = () => {
-  const {
-    isB2B,
-    setIsB2B,
-    cart,
-    setIsCartOpen,
-    searchQuery,
-    setSearchQuery,
-  } = useApp();
+  const { isB2B, setIsB2B, cart, setIsCartOpen, searchQuery, setSearchQuery } =
+    useApp();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -41,7 +35,10 @@ export const Navbar: React.FC = () => {
   // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
         setIsProfileOpen(false);
       }
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -64,17 +61,15 @@ export const Navbar: React.FC = () => {
   const totalCartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const navLinks = [
-    { name: "Shop", href: "/shop" },
-    { name: "Readymade Gardens", href: "/shop?category=readymade" },
-    { name: "AI Custom Canvas", href: "/ai-canvas" },
-    { name: "Individual Plants", href: "/shop?category=individual" },
-    { name: "B2B Bulk Portals", href: "/shop?b2b=true" },
+    { name: "Gardens", href: "/gardens" },
+    { name: "AI Studio", href: "/ai-canvas" },
+    { name: "Planting Guide", href: "/#" },
   ];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/shop?q=${encodeURIComponent(searchQuery)}`);
+      router.push(`/gardens?q=${encodeURIComponent(searchQuery)}`);
       setIsSearchOpen(false);
     }
   };
@@ -89,75 +84,50 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full glass-nav backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <header className="sticky top-0 z-40 w-full glass-nav shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[8vh] flex items-center justify-between">
           {/* Left: Logo */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="flex items-center gap-2 group focus:outline-none"
+              className="flex items-center gap-2 group focus:outline-none w-48 h-full "
             >
-              <div className="relative w-8 h-8 rounded-lg bg-brand-forest flex items-center justify-center text-white shadow-md shadow-brand-forest/20 group-hover:scale-105 transition-transform duration-200">
-                {/* Clean botanical leaf design using inline SVG */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-4 h-4"
-                >
-                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.2A7 7 0 0 1 11 20Z" />
-                  <path d="M19 2c-2.26 4.33-5.27 7.14-8 8" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold tracking-tight text-brand-forest font-sans">
-                EleDesigns
-              </span>
+              <img src={"/logo.jpeg"} className="w-full h-auto -ml-5" />
             </Link>
           </div>
 
           {/* Center: Links (Desktop) */}
-          {/* <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
-              const isB2BPortal = link.href === "/shop?b2b=true";
+
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => handleB2BPortalClick(e, link.href)}
-                  className={`relative py-2 text-sm font-medium transition-all duration-200 hover:text-brand-forest focus:outline-none ${
-                    isB2BPortal && isB2B
-                      ? "text-emerald-800 font-semibold"
-                      : isActive
-                      ? "text-brand-forest font-semibold"
-                      : "text-brand-charcoal/70"
+                  className={`relative py-1 text-sm font-medium transition-all duration-200  focus:outline-none ${
+                    isActive ? "font-semibold" : "text-brand-charcoal"
                   }`}
                 >
                   {link.name}
-         
+
                   <span
-                    className={`absolute bottom-0 left-0 w-full h-[2px] bg-brand-forest scale-x-0 origin-left transition-transform duration-300 ${
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-brand-forest scale-x-0 origin-left transition-transform duration-300 ${
                       isActive ? "scale-x-100" : "group-hover:scale-x-100"
                     }`}
                   />
-                  {isB2BPortal && (
-                    <span className="absolute -top-1.5 -right-5 text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-forest text-brand-cream tracking-wider scale-90">
-                      B2B
-                    </span>
-                  )}
                 </Link>
               );
             })}
-          </nav> */}
+          </nav>
 
           {/* Right: Actions */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             {/* Search Icon / Expanding Search Bar */}
-            <div ref={searchRef} className="relative hidden sm:block">
+            <div
+              ref={searchRef}
+              className="relative hidden sm:flex w-10 h-10 items-center justify-center"
+            >
               <AnimatePresence>
                 {isSearchOpen ? (
                   <motion.form
@@ -166,7 +136,7 @@ export const Navbar: React.FC = () => {
                     animate={{ width: 240, opacity: 1 }}
                     exit={{ width: 40, opacity: 0 }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center bg-white border border-brand-charcoal/15 rounded-full pl-3 pr-1 py-1 shadow-sm"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center bg-white border border-brand-charcoal/15 rounded-none pl-3 pr-1 py-1 shadow-sm z-10"
                   >
                     <input
                       ref={searchInputRef}
@@ -179,7 +149,7 @@ export const Navbar: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setIsSearchOpen(false)}
-                      className="p-1 text-brand-charcoal/40 hover:text-brand-charcoal hover:bg-brand-charcoal/5 rounded-full transition-colors"
+                      className="p-1 text-brand-charcoal/40 hover:text-brand-charcoal hover:bg-brand-charcoal/5 rounded-none transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -187,7 +157,7 @@ export const Navbar: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="p-2.5 rounded-full text-brand-charcoal/70 hover:text-brand-forest hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none"
+                    className="w-10 h-10 flex items-center justify-center  text-brand-charcoal/70 hover:text-brand-forest hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none"
                     aria-label="Search"
                   >
                     <Search className="w-5 h-5" />
@@ -199,8 +169,8 @@ export const Navbar: React.FC = () => {
             {/* User Account / Profile Dropdown */}
             <div ref={profileRef} className="relative hidden sm:block">
               <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className={`p-2.5 rounded-full text-brand-charcoal/70 hover:text-brand-forest hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none flex items-center gap-1 ${
+                // onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className={`p-2.5  text-brand-charcoal/70 hover:text-brand-forest hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none flex items-center gap-1 ${
                   isProfileOpen ? "bg-brand-charcoal/5 text-brand-forest" : ""
                 }`}
                 aria-expanded={isProfileOpen}
@@ -238,7 +208,9 @@ export const Navbar: React.FC = () => {
                           {isB2B ? "Green Trade Partner" : "Alexander Wright"}
                         </h4>
                         <p className="text-xs text-brand-charcoal/50">
-                          {isB2B ? "trade@eledesigns.com" : "alexander@gmail.com"}
+                          {isB2B
+                            ? "trade@eledesigns.com"
+                            : "alexander@gmail.com"}
                         </p>
                       </div>
                     </div>
@@ -357,7 +329,7 @@ export const Navbar: React.FC = () => {
             {/* Shopping Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-full text-brand-charcoal/70 hover:text-brand-forest hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none"
+              className="relative p-2.5 rounded-full text-brand-charcoal/70  hover:bg-brand-charcoal/5 transition-all duration-200 focus:outline-none"
               aria-label="Shopping Cart"
             >
               <ShoppingBag className="w-5 h-5" />
@@ -369,7 +341,7 @@ export const Navbar: React.FC = () => {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     key={totalCartCount}
-                    className="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 text-[9px] font-bold rounded-full bg-brand-forest text-brand-cream border border-brand-cream shadow-sm"
+                    className="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 text-[9px] font-bold rounded-full bg-black text-brand-cream border border-brand-cream shadow-sm"
                   >
                     {totalCartCount}
                   </motion.span>
@@ -410,7 +382,7 @@ export const Navbar: React.FC = () => {
                     placeholder="Search plants & collections..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-brand-charcoal/5 border border-brand-charcoal/10 rounded-full py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-forest focus:border-brand-forest text-brand-charcoal"
+                    className="w-full bg-brand-charcoal/5 border border-brand-charcoal/10 py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-brand-forest focus:border-brand-forest text-brand-charcoal"
                   />
                   <button
                     type="submit"
@@ -424,7 +396,7 @@ export const Navbar: React.FC = () => {
                 <nav className="flex flex-col space-y-4">
                   {navLinks.map((link) => {
                     const isActive = pathname === link.href;
-                    const isB2BPortal = link.href === "/shop?b2b=true";
+
                     return (
                       <Link
                         key={link.name}
@@ -434,26 +406,19 @@ export const Navbar: React.FC = () => {
                           setIsMobileMenuOpen(false);
                         }}
                         className={`text-base font-medium transition-colors py-1 ${
-                          isB2BPortal && isB2B
-                            ? "text-emerald-800 font-bold"
-                            : isActive
-                            ? "text-brand-forest font-semibold"
-                            : "text-brand-charcoal/80 hover:text-brand-forest"
+                          isActive
+                            ? " font-semibold"
+                            : "text-brand-charcoal hover:text-brand-forest"
                         }`}
                       >
                         {link.name}
-                        {isB2BPortal && (
-                          <span className="ml-2 text-[8px] font-bold px-1.5 py-0.5 rounded bg-brand-forest text-brand-cream uppercase tracking-wide">
-                            B2B
-                          </span>
-                        )}
                       </Link>
                     );
                   })}
                 </nav>
 
                 {/* B2B / B2C Toggle in Mobile Menu */}
-                <div className="pt-6 border-t border-brand-charcoal/5">
+                {/* <div className="pt-6 border-t border-brand-charcoal/5">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-brand-charcoal/60 uppercase">
                       Catalog Mode
@@ -485,10 +450,10 @@ export const Navbar: React.FC = () => {
                       B2B Trade
                     </button>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Mobile Logged In User State */}
-                <div className="pt-6 border-t border-brand-charcoal/5 flex items-center justify-between">
+                {/* <div className="pt-6 border-t border-brand-charcoal/5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-brand-forest/10 flex items-center justify-center text-brand-forest font-bold">
                       {isB2B ? "GP" : "AW"}
@@ -512,7 +477,7 @@ export const Navbar: React.FC = () => {
                   >
                     Logout
                   </button>
-                </div>
+                </div> */}
               </div>
             </motion.div>
           )}

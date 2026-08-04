@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Compass, Wand2 } from "lucide-react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Sparkles, Compass } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface Slide {
   id: number;
@@ -20,41 +20,39 @@ interface Slide {
 const SLIDES: Slide[] = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=2000",
-    tag: "Signature Collection",
-    title: "Sophisticated Balcony Escapes",
+    image: "/garden/heiz_steinig.jpeg",
+    tag: "Extremely low-maintenance",
+    title: "Heiß & Steinig",
     description:
-      "Transform your outdoor balcony into a lush, maintenance-friendly botanical escape. Explore our pre-designed garden layouts tailored to your space.",
+      "Heat-resistant, creeping plants such as Aubrieta and Armeria thrive even on hot stone.",
     cta1Text: "Explore Readymade Gardens",
-    cta1Href: "/#",
+    cta1Href: "/gardens",
     cta2Text: "Design with AI",
-    cta2Href: "/#",
+    cta2Href: "/ai-canvas",
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=2000",
-    tag: "Interior Botanical Layouts",
-    title: "Lush Living Room Atriums",
+    image: "/garden/wild_hoch.jpeg",
+    tag: "Tall grasses and perennials",
+    title: "Wild & Hoch",
     description:
-      "Curated selections of air-purifying architectural greenery designed to thrive in your interior spaces. Delivered with step-by-step DIY planting guides.",
-    cta1Text: "Explore Houseplants",
-    cta1Href: "/#",
-    cta2Text: "Design with AI",
-    cta2Href: "/#",
+      "An impressive planting design with heights reaching up to 2 meters, composed of lance-shaped flower spikes (Verbascum), lush Panicum grasses, and mallows.",
+    cta1Text: "Explore Concept Gardens",
+    cta1Href: "/gardens",
+    cta2Text: "Design Your Garden",
+    cta2Href: "/ai-canvas",
   },
   {
     id: 3,
-    image: "/garden1.png",
-    tag: "Large-Scale Landscaping",
-    title: "Luxurious Backyard Havens",
+    image: "/garden/romantisch.jpeg",
+    tag: "Harmonious and dreamy",
+    title: "Romantisch & Zart",
     description:
-      "Crafted exterior garden systems featuring premium evergreen flora and architectural accents. Optimize your property value with high-fidelity planning.",
+      "Delicate shades of soft pink, cream, and vibrant purple create a calm, elegant atmosphere. Featuring spherical flower globes, fragrant upright perennials, and feather-light grass.",
     cta1Text: "Explore Outdoor Kits",
-    cta1Href: "/#",
-    cta2Text: "B2B Trade Portal",
-    cta2Href: "/#",
+    cta1Href: "/gardens",
+    cta2Text: "Custom Design",
+    cta2Href: "/ai-canvas",
   },
 ];
 
@@ -87,7 +85,7 @@ export const Hero: React.FC = () => {
 
   return (
     <section
-      className="relative w-full h-[75vh] md:h-[80vh] overflow-hidden bg-brand-charcoal select-none"
+      className="relative w-full  h-[92vh] overflow-hidden bg-brand-charcoal select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -99,14 +97,14 @@ export const Hero: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             {/* Slide Image with subtle panning / zoom effect */}
             <motion.div
-              initial={{ scale: 1.05 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 6, ease: "easeOut" }}
+              initial={{ scale: 1.05, rotate: 1 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 4, ease: "easeOut" }}
               className="absolute inset-0 w-full h-full"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -118,58 +116,38 @@ export const Hero: React.FC = () => {
             </motion.div>
 
             {/* Dark Overlay Vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal via-brand-charcoal/45 to-brand-charcoal/30" />
+            <div className="absolute inset-0 bg-linear-to-t from-brand-charcoal/20 via-brand-charcoal/30 to-brand-charcoal/10" />
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Slide Content Overlay */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center md:text-left flex flex-col items-center md:items-start text-white">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="max-w-3xl space-y-4 md:space-y-6"
+      <div className="absolute bottom-[20vh] left-1/2 -translate-x-1/2 z-10 px-4 w-full flex justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
+          >
+            <Link
+              href={SLIDES[currentIndex].cta1Href}
+              className="flex items-center justify-center gap-2  px-6 py-3.5 bg-green-700 text-brand-cream font-semibold  shadow-lg text-base whitespace-nowrap w-full"
             >
-              {/* Tag */}
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold uppercase tracking-wider text-brand-sage-light">
-                <Sparkles className="w-3 h-3 text-brand-sage-light" />
-                {SLIDES[currentIndex].tag}
-              </span>
-
-              {/* Title */}
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-none text-white drop-shadow-md">
-                {SLIDES[currentIndex].title}
-              </h1>
-
-              {/* Description */}
-              <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed font-sans font-medium drop-shadow-sm">
-                {SLIDES[currentIndex].description}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                <Link
-                  href={SLIDES[currentIndex].cta1Href}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-brand-forest hover:bg-brand-forest-light text-brand-cream font-semibold rounded-full shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-98"
-                >
-                  <Compass className="w-4 h-4" />
-                  <span>{SLIDES[currentIndex].cta1Text}</span>
-                </Link>
-                <Link
-                  href={SLIDES[currentIndex].cta2Href}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-semibold rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-98"
-                >
-                  <span>{SLIDES[currentIndex].cta2Text}</span>
-                </Link>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              <Compass className="w-5 h-5 shrink-0" />
+              <span>{SLIDES[currentIndex].cta1Text}</span>
+            </Link>
+            <Link
+              href={SLIDES[currentIndex].cta2Href}
+              className="flex items-center justify-center gap-2  px-6 py-3.5 bg-white/80 border border-white/10 text-black font-semibold  text-base whitespace-nowrap w-full"
+            >
+              <Wand2 className="w-4 h-4 shrink-0" />
+              <span>{SLIDES[currentIndex].cta2Text}</span>
+            </Link>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Manual Slide Controls (Desktop) */}

@@ -5,6 +5,7 @@ import { AppContextProvider } from "@/context/AppContext";
 import { Navbar } from "@/components/Navbar";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ToastContainer } from "@/components/ToastContainer";
+import { Footer } from "@/components/Footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -24,19 +25,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal font-sans selection:bg-brand-sage/20 selection:text-brand-forest">
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal font-sans ">
         <AppContextProvider>
           <Navbar />
           <CartDrawer />
           <ToastContainer />
-          <main className="flex-grow flex flex-col">{children}</main>
+          <main className="grow flex flex-col">{children}</main>
+          <Footer />
         </AppContextProvider>
       </body>
     </html>
   );
 }
-

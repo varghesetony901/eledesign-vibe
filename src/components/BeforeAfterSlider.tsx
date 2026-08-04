@@ -102,7 +102,7 @@ export const BeforeAfterSlider: React.FC = () => {
         </div>
 
         {/* Slider Frame */}
-        <div className="relative w-full max-w-5xl mx-auto rounded-3xl overflow-hidden aspect-[16/10] md:aspect-[16/9] shadow-2xl border border-brand-charcoal/15 bg-brand-charcoal select-none">
+        <div className="relative w-full max-w-5xl mx-auto rounded-3xl overflow-hidden aspect-16/10 md:aspect-video shadow-2xl border border-brand-charcoal/15 bg-brand-charcoal select-none">
           
           {/* Main Slider Area */}
           <div
